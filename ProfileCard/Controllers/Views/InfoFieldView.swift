@@ -25,7 +25,6 @@ class InfoFieldView: UIView {
     let img = UIImageView()
     img.tintColor = .black
     img.contentMode = .scaleToFill
-    img.translatesAutoresizingMaskIntoConstraints = false
     return img
   }()
   
@@ -33,7 +32,7 @@ class InfoFieldView: UIView {
     let lbl = UILabel()
     lbl.textColor = .black
     lbl.font = .systemFont(ofSize: 22, weight: .bold)
-    lbl.translatesAutoresizingMaskIntoConstraints = false
+    lbl.numberOfLines = 2
     return lbl
   }()
   
@@ -41,6 +40,8 @@ class InfoFieldView: UIView {
     let stack = UIStackView(arrangedSubviews: [iconImg, titleLbl])
     stack.axis = .horizontal
     stack.spacing = 8
+    stack.clipsToBounds = true
+    stack.translatesAutoresizingMaskIntoConstraints = false
     return stack
   }()
   
@@ -60,7 +61,10 @@ class InfoFieldView: UIView {
       stackView.topAnchor.constraint(equalTo: topAnchor),
       stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
       stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-      stackView.bottomAnchor.constraint(equalTo: bottomAnchor)
+      stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+      
+      iconImg.heightAnchor.constraint(equalToConstant: 24),
+      iconImg.widthAnchor.constraint(equalTo: iconImg.heightAnchor),
     ])
   }
 }

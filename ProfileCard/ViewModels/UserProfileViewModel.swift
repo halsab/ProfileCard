@@ -12,12 +12,20 @@ class UserProfileViewModel {
   private(set) var firstName: String!
   private(set) var lastName: String!
   
+  private(set) var email: String!
+  private(set) var cell: String!
+  private(set) var location: String!
+  
   private var apiService: APIService!
   
   private var user : User? {
     didSet {
-      firstName = "\(user?.name.title ?? "") \(user?.name.first ?? "")"
-      lastName = user?.name.last ?? ""
+      guard let user = user else { return }
+      firstName = "\(user.name.title) \(user.name.first)"
+      lastName = user.name.last
+      email = user.email
+      cell = user.cell
+      location = "\(user.location.street.number) \(user.location.street.name), \(user.location.city)"
       didChangeOnMainThread {}
     }
   }
