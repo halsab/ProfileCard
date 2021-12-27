@@ -9,6 +9,8 @@ import UIKit
 
 class UserProfileVC: UIViewController {
   
+  // MARK: - View Model
+  
   private var userProfileViewModel: UserProfileViewModel? {
     willSet {
       userProfileViewModel?.onDataUpdate = nil
@@ -21,9 +23,18 @@ class UserProfileVC: UIViewController {
     }
   }
   
+  // MARK: - Constants
+  
   private struct Constants {
     static let imageSize = CGSize(width: 160, height: 160)
   }
+  
+  private let someColors: [UIColor] = [.systemBlue, .systemPink, .systemRed,
+                                       .systemGreen, .systemOrange, .systemYellow,
+                                       .systemPurple, .systemTeal, .systemIndigo,
+                                       .systemBrown]
+  
+  // MARK: - Views
   
   private let userImg: UIImageView = {
     let img = UIImageView()
@@ -63,19 +74,19 @@ class UserProfileVC: UIViewController {
   
   private let emailView: InfoFieldView = {
     let view = InfoFieldView()
-    view.icon = UIImage(systemName: "mail") ?? UIImage()
+    view.icon = UIImage(systemName: "envelope") ?? UIImage()
     return view
   }()
   
   private let cellView: InfoFieldView = {
     let view = InfoFieldView()
-    view.icon = UIImage(systemName: "phone.circle") ?? UIImage()
+    view.icon = UIImage(systemName: "phone") ?? UIImage()
     return view
   }()
   
   private let locationView: InfoFieldView = {
     let view = InfoFieldView()
-    view.icon = UIImage(systemName: "network") ?? UIImage()
+    view.icon = UIImage(systemName: "location") ?? UIImage()
     return view
   }()
   
@@ -93,8 +104,6 @@ class UserProfileVC: UIViewController {
     view.translatesAutoresizingMaskIntoConstraints = false
     return view
   }()
-  
-  private var someColors: [UIColor] = [.systemBlue, .systemPink, .systemRed, .systemGreen, .systemOrange]
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -102,13 +111,12 @@ class UserProfileVC: UIViewController {
     setUpViewModel()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-    super.viewWillAppear(animated)
-    headerColoredView.backgroundColor = someColors.shuffled().first?.withAlphaComponent(0.5)
-  }
+  // MARK: - Set Up
   
   private func setUp() {
     view.backgroundColor = .white
+    
+    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Update", style: .plain, target: self, action: #selector(updateTapped))
     
     view.addSubview(headerColoredView)
     view.addSubview(userImg)
@@ -141,6 +149,8 @@ class UserProfileVC: UIViewController {
     userProfileViewModel?.updateUserData()
   }
   
+  // MARK: - Update Data
+  
   private func updateData(by viewModel: UserProfileViewModel) {
     firstNameLbl.text = viewModel.firstName
     lastNameLbl.text = viewModel.lastName
@@ -154,6 +164,14 @@ class UserProfileVC: UIViewController {
         self?.userImg.image = image
       }
     }
+    
+    headerColoredView.backgroundColor = someColors.shuffled().first?.withAlphaComponent(0.5)
+  }
+  
+  // MARK: - Actions
+  
+  @objc private func updateTapped() {
+    userProfileViewModel?.updateUserData()
   }
 }
 

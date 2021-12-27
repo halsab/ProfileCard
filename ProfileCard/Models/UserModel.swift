@@ -7,8 +7,6 @@
 
 import Foundation
 
-// MARK: - User Model
-
 struct User: Decodable {
   let name: UserName
   let location: UserLocation

@@ -11,6 +11,8 @@ class APIService {
   
   private static let userDataUrl = URL(string: "https://randomuser.me/api/")
   
+  // MARK: - Get User Data
+  
   static func getUserData(completion : @escaping (User?) -> ()) {
     guard let url = userDataUrl else {
       completion(nil)
@@ -41,6 +43,8 @@ class APIService {
     }
   }
   
+  // MARK: - Download Image
+  
   static func downloadImage(from urlString: String, completion: @escaping (UIImage?) -> ()) {
     guard let url = URL(string: urlString) else {
       completion(nil)
@@ -63,6 +67,8 @@ class APIService {
       completion(UIImage(data: data))
     }
   }
+  
+  // MARK: - Private Functions
   
   private static func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
     URLSession.shared.dataTask(with: url, completionHandler: completion).resume()

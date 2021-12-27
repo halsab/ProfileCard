@@ -9,6 +9,8 @@ import UIKit
 
 class InfoFieldView: UIView {
   
+  // MARK: - Views
+  
   var icon: UIImage = UIImage() {
     didSet {
       iconImg.image = icon
@@ -28,7 +30,7 @@ class InfoFieldView: UIView {
   private let iconImg: UIImageView = {
     let img = UIImageView()
     img.tintColor = .black
-    img.contentMode = .scaleToFill
+    img.contentMode = .scaleAspectFit
     return img
   }()
   
@@ -71,6 +73,8 @@ class InfoFieldView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
+  // MARK: - Set Up
+  
   private func setUp() {
     addSubview(stackView)
     
@@ -82,7 +86,6 @@ class InfoFieldView: UIView {
       
       lineView.heightAnchor.constraint(equalToConstant: 1),
       
-      iconImg.heightAnchor.constraint(equalToConstant: Constants.imageSize.height),
       iconImg.widthAnchor.constraint(equalToConstant: Constants.imageSize.width),
     ])
   }
