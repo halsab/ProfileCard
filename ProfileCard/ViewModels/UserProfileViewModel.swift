@@ -16,7 +16,7 @@ class UserProfileViewModel {
   private(set) var cell: String!
   private(set) var location: String!
   
-  private var apiService: APIService!
+  private(set) var imageStringUrl: String!
   
   private var user : User? {
     didSet {
@@ -26,23 +26,19 @@ class UserProfileViewModel {
       email = user.email
       cell = user.cell
       location = "\(user.location.street.number) \(user.location.street.name), \(user.location.city)"
+      imageStringUrl = user.picture.large
       didChangeOnMainThread {}
     }
   }
   
   var onDataUpdate: (()->())?
   
-  init() {
-    apiService = APIService()
-    fetchUserData()
-  }
-  
   func updateUserData() {
     fetchUserData()
   }
   
   private func fetchUserData() {
-    apiService.getUserData { user in
+    APIService.getUserData { user in
       if let user = user {
         self.user = user
       }

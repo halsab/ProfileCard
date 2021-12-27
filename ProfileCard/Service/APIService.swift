@@ -5,19 +5,19 @@
 //  Created by Ha Sab on 27.12.2021.
 //
 
-import Foundation
+import UIKit
 
 class APIService {
   
-  private let url = URL(string: "https://randomuser.me/api/")
+  private static let userDataUrl = URL(string: "https://randomuser.me/api/")
   
-  func getUserData(completion : @escaping (User?) -> Void) {
-    guard let url = url else {
+  static func getUserData(completion : @escaping (User?) -> ()) {
+    guard let url = userDataUrl else {
       completion(nil)
       return
     }
     
-    URLSession.shared.dataTask(with: url) { data, response, error in
+    getData(from: url) { data, response, error in
       guard let data = data, error == nil else {
         print(error?.localizedDescription ?? "No data")
         completion(nil)
@@ -38,7 +38,33 @@ class APIService {
         print(error.localizedDescription)
         completion(nil)
       }
-      
-    }.resume()
+    }
+  }
+  
+  static func downloadImage(from urlString: String, completion: @escaping (UIImage?) -> ()) {
+    guard let url = URL(string: urlString) else {
+      completion(nil)
+      return
+    }
+    print("Download Started")
+    getData(from: url) { data, response, error in
+      guard let data = data, error == nil else {
+        print(error?.localizedDescription ?? "No data")
+        completion(nil)
+        return
+      }
+      guard let resp = response as? HTTPURLResponse, resp.statusCode == 200 else {
+        print("Unknown error")
+        completion(nil)
+        return
+      }
+      print(response?.suggestedFilename ?? url.lastPathComponent)
+      print("Download Finished")
+      completion(UIImage(data: data))
+    }
+  }
+  
+  private static func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+    URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
   }
 }

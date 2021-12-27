@@ -21,6 +21,10 @@ class InfoFieldView: UIView {
     }
   }
   
+  private struct Constants {
+    static let imageSize = CGSize(width: 24, height: 24)
+  }
+  
   private let iconImg: UIImageView = {
     let img = UIImageView()
     img.tintColor = .black
@@ -31,14 +35,27 @@ class InfoFieldView: UIView {
   private let titleLbl: UILabel = {
     let lbl = UILabel()
     lbl.textColor = .black
-    lbl.font = .systemFont(ofSize: 22, weight: .bold)
-    lbl.numberOfLines = 2
+    lbl.font = .systemFont(ofSize: 16, weight: .semibold)
     return lbl
   }()
   
-  private lazy var stackView: UIStackView = {
+  private lazy var infoStackView: UIStackView = {
     let stack = UIStackView(arrangedSubviews: [iconImg, titleLbl])
     stack.axis = .horizontal
+    stack.spacing = 8
+    stack.clipsToBounds = true
+    return stack
+  }()
+  
+  private let lineView: UIView = {
+    let view = UIView()
+    view.backgroundColor = .systemGray4
+    return view
+  }()
+  
+  private lazy var stackView: UIStackView = {
+    let stack = UIStackView(arrangedSubviews: [infoStackView, lineView])
+    stack.axis = .vertical
     stack.spacing = 8
     stack.clipsToBounds = true
     stack.translatesAutoresizingMaskIntoConstraints = false
@@ -63,8 +80,10 @@ class InfoFieldView: UIView {
       stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
       stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
       
-      iconImg.heightAnchor.constraint(equalToConstant: 24),
-      iconImg.widthAnchor.constraint(equalTo: iconImg.heightAnchor),
+      lineView.heightAnchor.constraint(equalToConstant: 1),
+      
+      iconImg.heightAnchor.constraint(equalToConstant: Constants.imageSize.height),
+      iconImg.widthAnchor.constraint(equalToConstant: Constants.imageSize.width),
     ])
   }
 }
