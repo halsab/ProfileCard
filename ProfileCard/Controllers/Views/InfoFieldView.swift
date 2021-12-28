@@ -38,6 +38,7 @@ class InfoFieldView: UIView {
     let lbl = UILabel()
     lbl.textColor = .black
     lbl.font = .systemFont(ofSize: 16, weight: .semibold)
+    lbl.numberOfLines = 2
     return lbl
   }()
   

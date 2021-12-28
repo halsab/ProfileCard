@@ -146,7 +146,6 @@ class UserProfileVC: UIViewController {
   
   private func setUpViewModel() {
     userProfileViewModel = UserProfileViewModel()
-    userProfileViewModel?.updateUserData()
   }
   
   // MARK: - Update Data
@@ -159,11 +158,7 @@ class UserProfileVC: UIViewController {
     cellView.title = viewModel.cell
     locationView.title = viewModel.location
     
-    APIService.downloadImage(from: viewModel.imageStringUrl) { image in
-      DispatchQueue.main.async() { [weak self] in
-        self?.userImg.image = image
-      }
-    }
+    userImg.image = viewModel.image
     
     headerColoredView.backgroundColor = someColors.shuffled().first?.withAlphaComponent(0.5)
   }

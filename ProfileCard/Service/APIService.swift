@@ -9,28 +9,18 @@ import UIKit
 
 class APIService {
   
-  private static let userDataUrl = URL(string: "https://randomuser.me/api/")
+  private struct URLStrings {
+    static let userData = "https://randomuser.me/api/"
+  }
   
   // MARK: - Get User Data
   
-  static func getUserData(completion : @escaping (User?) -> ()) {
-    guard let url = userDataUrl else {
-      completion(nil)
-      return
-    }
-    
-    getData(from: url) { data, response, error in
-      guard let data = data, error == nil else {
-        print(error?.localizedDescription ?? "No data")
+  func getUserData(completion : @escaping (User?) -> ()) {
+    getData(from: URLStrings.userData) { data in
+      guard let data = data else {
         completion(nil)
         return
       }
-      guard let resp = response as? HTTPURLResponse, resp.statusCode == 200 else {
-        print("Unknown error")
-        completion(nil)
-        return
-      }
-      
       do {
         let results = try JSONSerialization.jsonObject(with: data) as! [String:Any]
         let usersData = try JSONSerialization.data(withJSONObject: results["results"] as Any)
@@ -45,13 +35,24 @@ class APIService {
   
   // MARK: - Download Image
   
-  static func downloadImage(from urlString: String, completion: @escaping (UIImage?) -> ()) {
+  func getImage(from urlString: String, completion: @escaping (UIImage?) -> ()) {
+    getData(from: urlString) { data in
+      guard let data = data else {
+        completion(nil)
+        return
+      }
+      completion(UIImage(data: data))
+    }
+  }
+  
+  // MARK: - Private Functions
+  
+  private func getData(from urlString: String, completion: @escaping (Data?) -> ()) {
     guard let url = URL(string: urlString) else {
       completion(nil)
       return
     }
-    print("Download Started")
-    getData(from: url) { data, response, error in
+    URLSession.shared.dataTask(with: url) { data, response, error in
       guard let data = data, error == nil else {
         print(error?.localizedDescription ?? "No data")
         completion(nil)
@@ -62,15 +63,7 @@ class APIService {
         completion(nil)
         return
       }
-      print(response?.suggestedFilename ?? url.lastPathComponent)
-      print("Download Finished")
-      completion(UIImage(data: data))
-    }
-  }
-  
-  // MARK: - Private Functions
-  
-  private static func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
-    URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+      completion(data)
+    }.resume()
   }
 }
